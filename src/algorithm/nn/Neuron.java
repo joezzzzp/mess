@@ -1,0 +1,41 @@
+package algorithm.nn;
+
+import algorithm.nn.framework.BaseNeuralNetworkComponent;
+import algorithm.nn.framework.NeuralNetworkContext;
+import algorithm.nn.framework.NeuralNetworkException;
+
+/**
+ * @author created by zzz at 2019/11/22 14:31
+ */
+
+public class Neuron extends BaseNeuralNetworkComponent {
+
+    /**
+     * 记录上一层所有节点指向自己的权重
+     */
+    private double[] weights;
+
+    public Neuron(NeuralNetworkContext context, int lastLayerNeuronNumber) {
+        super(context);
+        weights = new double[lastLayerNeuronNumber];
+    }
+
+    public void setWeights(double[] weights) {
+        this.weights = weights;
+    }
+
+    public double[] getWeights() {
+        return weights;
+    }
+
+    public double outPutWithOutBiasAndActive(double[] inputs) {
+        if (inputs.length != weights.length) {
+            throw new NeuralNetworkException("Invalid input");
+        }
+        double result = 0.0;
+        for (int i = 0; i < weights.length; i++) {
+            result += inputs[i] * weights[i];
+        }
+        return result;
+    }
+}
