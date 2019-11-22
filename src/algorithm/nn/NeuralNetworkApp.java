@@ -8,12 +8,16 @@ import algorithm.nn.framework.NeuralNetworkContext;
 
 public class NeuralNetworkApp {
 
+    //https://blog.csdn.net/weixin_38347387/article/details/82936585
     public static void main(String[] args) {
         NeuralNetworkContext context = new NeuralNetworkContext();
         context.setActiveFunction(new Sigmoid());
         NeuralNetwork nn = new NeuralNetwork(context);
-        nn.setInputLayer(new InputLayer(context, 2));
-        nn.addHiddenLayer(new HiddenLayer(context, 2));
-        nn.setOutputLayer(new OutputLayer(context, 2));
+        InputLayer inputLayer = new InputLayer(context, 2);
+        HiddenLayer hiddenLayer = new HiddenLayer(context, 2);
+        OutputLayer outputLayer = new OutputLayer(context, 2);
+        nn.setInputLayer(inputLayer);
+        nn.addHiddenLayer(hiddenLayer);
+        nn.setOutputLayer(outputLayer);
     }
 }
