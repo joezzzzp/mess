@@ -12,5 +12,11 @@ public interface Layer {
 
     double[] forward(double[] input);
 
-    void backward();
+    void backward(double[] output, double[][] base);
+
+    double[][] getBase();
+
+    void setBase(double[][] base);
+
+    double[] getInput();
 }

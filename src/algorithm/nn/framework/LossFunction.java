@@ -9,8 +9,9 @@ public interface LossFunction {
 
     /**
      * 计算损失
-     * @param input 输入值
+     * @param output 实际输出
+     * @param expected 期望输出
      * @return 计算后结果
      */
-    double calLoss(double input);
+    double calLoss(double[] output, double[] expected);
 }

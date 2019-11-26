@@ -17,6 +17,12 @@ public class NeuralNetwork extends BaseNeuralNetworkComponent {
 
     private boolean hasOutput = false;
 
+    private double[] input;
+
+    private double[] outPut;
+
+    private double[] expected;
+
     public NeuralNetwork(NeuralNetworkContext context) {
         super(context);
     }
@@ -38,14 +44,39 @@ public class NeuralNetwork extends BaseNeuralNetworkComponent {
         }
     }
 
-    public double[] forward(double[] input) {
+    public void setInput(double[] input) {
+        this.input = input;
+    }
+
+    public double[] forward() {
         if (!layers.isEmpty()) {
             double[] last = input;
             for (Layer layer : layers) {
                 last = layer.forward(last);
             }
+            outPut = last;
             return last;
         }
         return new double[0];
+    }
+
+    public void setExpected(double[] expected) {
+        this.expected = expected;
+    }
+
+    public void backward() {
+        double[] a = outPut;
+        double[][] b = new double[1][expected.length];
+        b[0] = expected;
+        for (int i = layers.size() - 1; i >= 0; i--) {
+            Layer currentLayer = layers.get(i);
+            currentLayer.backward(a, b);
+            a = currentLayer.getInput();
+            b = currentLayer.getBase();
+        }
+    }
+
+    public double calLoss() {
+        return context.getLossFunction().calLoss(outPut, expected);
     }
 }

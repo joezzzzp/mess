@@ -1,6 +1,7 @@
 package algorithm.nn;
 
 import algorithm.nn.framework.NeuralNetworkContext;
+import algorithm.nn.framework.SquareError;
 
 /**
  * @author created by zzz at 2019/11/22 18:31
@@ -12,6 +13,8 @@ public class NeuralNetworkApp {
     public static void main(String[] args) {
         NeuralNetworkContext context = new NeuralNetworkContext();
         context.setActiveFunction(new Sigmoid());
+        context.setLossFunction(new SquareError());
+        context.setLearnRate(10);
         NeuralNetwork nn = new NeuralNetwork(context);
         InputLayer inputLayer = new InputLayer(context, 2);
 
@@ -35,8 +38,23 @@ public class NeuralNetworkApp {
         nn.addHiddenLayer(hiddenLayer);
         nn.setOutputLayer(outputLayer);
 
-        print(nn.forward(new double[]{0.05, 0.10}));
+        double[] input = new double[]{0.05, 0.10};
+        double[] expected = new double[]{0.01, 0.99};
 
+        nn.setInput(input);
+        nn.setExpected(expected);
+
+        for (int i = 0; i < 10000; i++) {
+            System.out.println("迭代第" + i + "次：");
+            double[] result = nn.forward();
+            double loss = nn.calLoss();
+            System.out.print("输出：");
+            print(result);
+            System.out.println();
+            System.out.println("损失：" + loss);
+            System.out.println();
+            nn.backward();
+        }
     }
 
     private static void print(double[] result) {
@@ -44,6 +62,5 @@ public class NeuralNetworkApp {
             System.out.print(d);
             System.out.print(" ");
         }
-        System.out.println();
     }
 }

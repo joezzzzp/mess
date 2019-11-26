@@ -8,11 +8,15 @@ import algorithm.nn.Neuron;
 
 public abstract class BaseLayer extends BaseNeuralNetworkComponent implements Layer {
 
-    private double bias;
+    protected double bias;
 
-    private int neuronNumber;
+    protected double[] input;
 
-    private Neuron[] neurons;
+    protected int neuronNumber;
+
+    protected Neuron[] neurons;
+
+    protected double[][] base;
 
     public BaseLayer(NeuralNetworkContext context, int neuronNumber) {
         this(context, neuronNumber, 0.0);
@@ -36,6 +40,7 @@ public abstract class BaseLayer extends BaseNeuralNetworkComponent implements La
 
     @Override
     public double[] forward(double[] input) {
+        this.input = input;
         double[] result = new double[neurons.length];
         for (int i = 0; i < neurons.length; i++) {
             Neuron neuron = neurons[i];
@@ -45,7 +50,17 @@ public abstract class BaseLayer extends BaseNeuralNetworkComponent implements La
     }
 
     @Override
-    public void backward() {
+    public double[] getInput() {
+        return input;
+    }
 
+    @Override
+    public void setBase(double[][] base) {
+        this.base = base;
+    }
+
+    @Override
+    public double[][] getBase() {
+        return base;
     }
 }

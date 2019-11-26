@@ -21,4 +21,9 @@ public class InputLayer extends BaseLayer {
     public double[] forward(double[] input) {
         return input;
     }
+
+    @Override
+    public void backward(double[] output, double[][] base) {
+
+    }
 }

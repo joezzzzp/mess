@@ -15,6 +15,11 @@ public class Neuron extends BaseNeuralNetworkComponent {
      */
     private double[] weights;
 
+    /**
+     * 未运用激活函数前的输出
+     */
+    private double output;
+
     public Neuron(NeuralNetworkContext context, int lastLayerNeuronNumber) {
         super(context);
         weights = new double[lastLayerNeuronNumber];
@@ -28,6 +33,10 @@ public class Neuron extends BaseNeuralNetworkComponent {
         return weights;
     }
 
+    public double getOutput() {
+        return output;
+    }
+
     public double outPutWithOutBiasAndActive(double[] inputs) {
         if (inputs.length != weights.length) {
             throw new NeuralNetworkException("Invalid input");
@@ -36,6 +45,7 @@ public class Neuron extends BaseNeuralNetworkComponent {
         for (int i = 0; i < weights.length; i++) {
             result += inputs[i] * weights[i];
         }
+        output = result;
         return result;
     }
 }
