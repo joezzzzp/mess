@@ -29,6 +29,7 @@ public abstract class BaseLayer extends BaseNeuralNetworkComponent implements La
     public void setNeuron(int position, Neuron neuron) {
         if (position >= 0 && position < neurons.length) {
             neurons[position] = neuron;
+            return;
         }
         throw new NeuralNetworkException("Out of bounds");
     }
