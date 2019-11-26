@@ -3,6 +3,10 @@ package algorithm.nn;
 import algorithm.nn.framework.NeuralNetworkContext;
 import algorithm.nn.framework.SquareError;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
 /**
  * @author created by zzz at 2019/11/22 18:31
  */
@@ -14,46 +18,85 @@ public class NeuralNetworkApp {
         NeuralNetworkContext context = new NeuralNetworkContext();
         context.setActiveFunction(new Sigmoid());
         context.setLossFunction(new SquareError());
-        context.setLearnRate(10);
+        context.setLearnRate(0.1);
         NeuralNetwork nn = new NeuralNetwork(context);
-        InputLayer inputLayer = new InputLayer(context, 2);
+        InputLayer inputLayer = new InputLayer(context, 1);
 
-        HiddenLayer hiddenLayer = new HiddenLayer(context, 2, 0.35);
-        Neuron h1 = new Neuron(context, 2);
-        h1.setWeights(new double[]{0.15, 0.20});
-        Neuron h2 = new Neuron(context, 2);
-        h2.setWeights(new double[]{0.25, 0.30});
+        HiddenLayer hiddenLayer = new HiddenLayer(context, 2, 0.00);
+        Neuron h1 = new Neuron(context, 1);
+        h1.setWeights(new double[]{0.03});
+        Neuron h2 = new Neuron(context, 1);
+        h2.setWeights(new double[]{0.98});
         hiddenLayer.setNeuron(0, h1);
         hiddenLayer.setNeuron(1, h2);
 
-        OutputLayer outputLayer = new OutputLayer(context, 2, 0.60);
+        HiddenLayer hiddenLayer2 = new HiddenLayer(context, 2, 0.00);
+        Neuron h21 = new Neuron(context, 2);
+        h21.setWeights(new double[]{0.08, 0.73});
+        Neuron h22 = new Neuron(context, 2);
+        h22.setWeights(new double[]{0.2, 0.005});
+        hiddenLayer2.setNeuron(0, h21);
+        hiddenLayer2.setNeuron(1, h22);
+
+        OutputLayer outputLayer = new OutputLayer(context, 1, 0.00);
         Neuron o1 = new Neuron(context, 2);
-        Neuron o2 = new Neuron(context, 2);
-        o1.setWeights(new double[]{0.40, 0.45});
-        o2.setWeights(new double[]{0.50, 0.55});
+        o1.setWeights(new double[]{0.648, 0.789});
         outputLayer.setNeuron(0, o1);
-        outputLayer.setNeuron(1, o2);
 
         nn.setInputLayer(inputLayer);
         nn.addHiddenLayer(hiddenLayer);
+        nn.addHiddenLayer(hiddenLayer2);
         nn.setOutputLayer(outputLayer);
 
-        double[] input = new double[]{0.05, 0.10};
-        double[] expected = new double[]{0.01, 0.99};
-
-        nn.setInput(input);
-        nn.setExpected(expected);
+        Map<Integer, Boolean> trainSet = new HashMap<>();
+        Map<Integer, Boolean> testSet = new HashMap<>();
+        buildSet(trainSet, testSet);
 
         for (int i = 0; i < 10000; i++) {
             System.out.println("迭代第" + i + "次：");
-            double[] result = nn.forward();
-            double loss = nn.calLoss();
-            System.out.print("输出：");
-            print(result);
-            System.out.println();
-            System.out.println("损失：" + loss);
-            System.out.println();
-            nn.backward();
+            train(nn, trainSet);
+            test(nn, testSet);
+        }
+    }
+
+    private static void train(NeuralNetwork neuralNetwork, Map<Integer, Boolean> trainSet) {
+        for (Map.Entry<Integer, Boolean> item : trainSet.entrySet()) {
+            double[] input = new double[]{ (double) item.getKey() / 10000.0 };
+            double[] expected = new double[]{ convert(item.getValue()) };
+            neuralNetwork.setInput(input);
+            neuralNetwork.setExpected(expected);
+            neuralNetwork.forward();
+            neuralNetwork.backward();
+        }
+    }
+
+    private static void test(NeuralNetwork neuralNetwork, Map<Integer, Boolean> testSet) {
+        int rightCount = 0;
+        for (Map.Entry<Integer, Boolean> item : testSet.entrySet()) {
+            double[] input = new double[]{(double) item.getKey() / 10000.0 };
+            neuralNetwork.setInput(input);
+            double result = neuralNetwork.forward()[0];
+            boolean isEven = result >= 0.5;
+            if (isEven == item.getValue()) {
+                rightCount++;
+            }
+        }
+        System.out.println("准确率：" + (double) rightCount / (double) testSet.size());
+    }
+
+    private static double convert(boolean b) {
+        return b ? 1 : 0;
+    }
+
+    //true 偶数 false 奇数
+    private static void buildSet(Map<Integer, Boolean> trainSet, Map<Integer, Boolean> testSet) {
+        Random random = new Random();
+        for (int i = 0; i < 10000; i++) {
+            if (random.nextInt(10) == 0) {
+                testSet.put(i, i % 2 == 0);
+                continue;
+            }
+            trainSet.put(i, i % 2 == 0);
         }
     }
 

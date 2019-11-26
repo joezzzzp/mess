@@ -63,4 +63,15 @@ public abstract class BaseLayer extends BaseNeuralNetworkComponent implements La
     public double[][] getBase() {
         return base;
     }
+
+    @Override
+    public void backward(double[] output, double[][] base) {
+        for (Neuron n : neurons) {
+            for (double d : n.getWeights()) {
+                System.out.print(d + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
 }
