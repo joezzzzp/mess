@@ -1,11 +1,12 @@
 package algorithm.nn;
 
+import algorithm.nn.framework.InitStrategy;
+import algorithm.nn.framework.NeuralNetwork;
 import algorithm.nn.framework.NeuralNetworkContext;
-import algorithm.nn.framework.SquareError;
+import algorithm.nn.framework.func.Sigmoid;
+import algorithm.nn.framework.func.SquareError;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @author created by zzz at 2019/11/22 18:31
@@ -19,52 +20,50 @@ public class NeuralNetworkApp {
         context.setActiveFunction(new Sigmoid());
         context.setLossFunction(new SquareError());
         context.setLearnRate(0.1);
+        context.setInputSize(32);
+        context.setHiddenLayerNeuronNumber(new int[]{14});
+        context.setOutPutSize(1);
+        context.setInitStrategy(InitStrategy.RANDOM);
         NeuralNetwork nn = new NeuralNetwork(context);
-        InputLayer inputLayer = new InputLayer(context, 1);
-
-        HiddenLayer hiddenLayer = new HiddenLayer(context, 2, 0.00);
-        Neuron h1 = new Neuron(context, 1);
-        h1.setWeights(new double[]{0.03});
-        Neuron h2 = new Neuron(context, 1);
-        h2.setWeights(new double[]{0.98});
-        hiddenLayer.setNeuron(0, h1);
-        hiddenLayer.setNeuron(1, h2);
-
-        HiddenLayer hiddenLayer2 = new HiddenLayer(context, 2, 0.00);
-        Neuron h21 = new Neuron(context, 2);
-        h21.setWeights(new double[]{0.08, 0.73});
-        Neuron h22 = new Neuron(context, 2);
-        h22.setWeights(new double[]{0.2, 0.005});
-        hiddenLayer2.setNeuron(0, h21);
-        hiddenLayer2.setNeuron(1, h22);
-
-        OutputLayer outputLayer = new OutputLayer(context, 1, 0.00);
-        Neuron o1 = new Neuron(context, 2);
-        o1.setWeights(new double[]{0.648, 0.789});
-        outputLayer.setNeuron(0, o1);
-
-        nn.setInputLayer(inputLayer);
-        nn.addHiddenLayer(hiddenLayer);
-        nn.addHiddenLayer(hiddenLayer2);
-        nn.setOutputLayer(outputLayer);
+        nn.build();
 
         Map<Integer, Boolean> trainSet = new HashMap<>();
         Map<Integer, Boolean> testSet = new HashMap<>();
         buildSet(trainSet, testSet);
 
-        for (int i = 0; i < 10000; i++) {
-            System.out.println("迭代第" + i + "次：");
+        System.out.println("未训练时：");
+        test(nn, testSet);
+        apply(nn);
+        for (int i = 0; i < 100; i++) {
             train(nn, trainSet);
-            test(nn, testSet);
+            if (i % 10 == 0) {
+                System.out.println("迭代第" + (i + 1) + "次：");
+                test(nn, testSet);
+            }
+        }
+        apply(nn);
+    }
+
+    private static void apply(NeuralNetwork neuralNetwork) {
+        System.out.println("请输入要测试的数字（0 - 10000，输入范围之外的数字退出）：");
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNextInt()) {
+            int value = scanner.nextInt();
+            if (value > 10000 || value < 0) {
+                break;
+            }
+            neuralNetwork.setInput(toBinaryNum(value));
+            double[] result = neuralNetwork.forward();
+            print(result);
+            String ret = result[0] >= 0.5 ? "偶数" : "奇数";
+            System.out.println(value + "是" + ret);
         }
     }
 
     private static void train(NeuralNetwork neuralNetwork, Map<Integer, Boolean> trainSet) {
         for (Map.Entry<Integer, Boolean> item : trainSet.entrySet()) {
-            double[] input = new double[]{ (double) item.getKey() / 10000.0 };
-            double[] expected = new double[]{ convert(item.getValue()) };
-            neuralNetwork.setInput(input);
-            neuralNetwork.setExpected(expected);
+            neuralNetwork.setInput(toBinaryNum(item.getKey()));
+            neuralNetwork.setExpected(new double[]{ convert(item.getValue()) });
             neuralNetwork.forward();
             neuralNetwork.backward();
         }
@@ -73,15 +72,14 @@ public class NeuralNetworkApp {
     private static void test(NeuralNetwork neuralNetwork, Map<Integer, Boolean> testSet) {
         int rightCount = 0;
         for (Map.Entry<Integer, Boolean> item : testSet.entrySet()) {
-            double[] input = new double[]{(double) item.getKey() / 10000.0 };
-            neuralNetwork.setInput(input);
+            neuralNetwork.setInput(toBinaryNum(item.getKey()));
             double result = neuralNetwork.forward()[0];
             boolean isEven = result >= 0.5;
             if (isEven == item.getValue()) {
                 rightCount++;
             }
         }
-        System.out.println("准确率：" + (double) rightCount / (double) testSet.size());
+        System.out.println("测试集准确率：" + (double) rightCount / (double) testSet.size());
     }
 
     private static double convert(boolean b) {
@@ -105,5 +103,16 @@ public class NeuralNetworkApp {
             System.out.print(d);
             System.out.print(" ");
         }
+    }
+
+    private static double[] toBinaryNum(int num)  //将十进制转为二进制
+    {
+        double[] binaryNum = new double[32];
+        for(int i = 31; i >= 0; i--)
+        {
+            binaryNum[i] = num % 2;
+            num /= 2;
+        }
+        return binaryNum;
     }
 }

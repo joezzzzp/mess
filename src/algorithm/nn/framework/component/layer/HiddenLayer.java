@@ -1,7 +1,8 @@
-package algorithm.nn;
+package algorithm.nn.framework.component.layer;
 
-import algorithm.nn.framework.BaseLayer;
+import algorithm.nn.framework.InitStrategy;
 import algorithm.nn.framework.NeuralNetworkContext;
+import algorithm.nn.framework.component.neuron.Neuron;
 
 /**
  * @author created by zzz at 2019/11/22 18:11
@@ -9,12 +10,29 @@ import algorithm.nn.framework.NeuralNetworkContext;
 
 public class HiddenLayer extends BaseLayer {
 
-    public HiddenLayer(NeuralNetworkContext context, int neuronNumber) {
-        super(context, neuronNumber);
+    private int index;
+
+    public HiddenLayer(NeuralNetworkContext context, int index) {
+        super(context);
+        this.index = index;
     }
 
-    public HiddenLayer(NeuralNetworkContext context, int neuronNumber, double bias) {
-        super(context, neuronNumber, bias);
+    public HiddenLayer(NeuralNetworkContext context, int index, double bias) {
+        super(context, bias);
+        this.index = index;
+    }
+
+    @Override
+    public void init() {
+        neuronNumber = context.getHiddenLayerNeuronNumber()[index];
+        neurons = new Neuron[neuronNumber];
+        if (context.getInitStrategy() == InitStrategy.RANDOM) {
+            int inputSize = context.getInputSize();
+            if (index > 0) {
+                inputSize = context.getHiddenLayerNeuronNumber()[index - 1];
+            }
+            randomInitNeuron(inputSize);
+        }
     }
 
     @Override

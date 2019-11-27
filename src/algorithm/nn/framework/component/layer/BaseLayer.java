@@ -1,6 +1,9 @@
-package algorithm.nn.framework;
+package algorithm.nn.framework.component.layer;
 
-import algorithm.nn.Neuron;
+import algorithm.nn.framework.NeuralNetworkContext;
+import algorithm.nn.framework.NeuralNetworkException;
+import algorithm.nn.framework.component.neuron.Neuron;
+import algorithm.nn.framework.component.BaseNeuralNetworkComponent;
 
 /**
  * @author created by zzz at 2019/11/22 14:30
@@ -18,14 +21,12 @@ public abstract class BaseLayer extends BaseNeuralNetworkComponent implements La
 
     protected double[][] base;
 
-    public BaseLayer(NeuralNetworkContext context, int neuronNumber) {
-        this(context, neuronNumber, 0.0);
+    public BaseLayer(NeuralNetworkContext context) {
+        this(context, 0.0);
     }
 
-    public BaseLayer(NeuralNetworkContext context, int neuronNumber, double bias) {
+    public BaseLayer(NeuralNetworkContext context, double bias) {
         super(context);
-        neurons = new Neuron[neuronNumber];
-        this.neuronNumber = neuronNumber;
         this.bias = bias;
     }
 
@@ -66,12 +67,23 @@ public abstract class BaseLayer extends BaseNeuralNetworkComponent implements La
 
     @Override
     public void backward(double[] output, double[][] base) {
-        for (Neuron n : neurons) {
-            for (double d : n.getWeights()) {
-                System.out.print(d + " ");
+
+    }
+
+    @Override
+    public void init() {
+
+    }
+
+    protected void randomInitNeuron(int inputSize) {
+        for (int i = 0; i < neuronNumber; i++) {
+            Neuron neuron = new Neuron(context);
+            double[] weights = new double[inputSize];
+            for (int j = 0; j < inputSize; j++) {
+                weights[j] = Math.random();
             }
-            System.out.println();
+            neuron.setWeights(weights);
+            neurons[i] = neuron;
         }
-        System.out.println();
     }
 }

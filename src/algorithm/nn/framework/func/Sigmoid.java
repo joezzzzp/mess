@@ -1,17 +1,12 @@
-package algorithm.nn;
+package algorithm.nn.framework.func;
 
-import algorithm.nn.framework.ActiveFunction;
+import algorithm.nn.framework.func.ActiveFunction;
 
 /**
  * @author created by zzz at 2019/11/22 14:23
  */
 
 public class Sigmoid implements ActiveFunction {
-
-    /**
-     * 常量e
-     */
-    private static final double E = Math.E;
 
     /**
      *           1
@@ -23,6 +18,6 @@ public class Sigmoid implements ActiveFunction {
      */
     @Override
     public double active(double input) {
-        return 1 / (1 + Math.pow(E, -input));
+        return 1 / (1 + Math.exp(-input));
     }
 }

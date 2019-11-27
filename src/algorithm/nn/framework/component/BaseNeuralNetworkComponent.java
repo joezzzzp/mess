@@ -1,4 +1,4 @@
-package algorithm.nn.framework;
+package algorithm.nn.framework.component;
 
 import algorithm.nn.framework.NeuralNetworkContext;
 

@@ -1,10 +1,12 @@
-package algorithm.nn.framework;
+package algorithm.nn.framework.func;
+
+import algorithm.nn.framework.func.LossFunction;
 
 /**
  * @author created by zzz at 2019/11/26 10:23
  */
 
-public class SquareError implements LossFunction{
+public class SquareError implements LossFunction {
 
     @Override
     public double calLoss(double[] output, double[] expected) {

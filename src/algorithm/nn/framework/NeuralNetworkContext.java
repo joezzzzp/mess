@@ -1,5 +1,8 @@
 package algorithm.nn.framework;
 
+import algorithm.nn.framework.func.ActiveFunction;
+import algorithm.nn.framework.func.LossFunction;
+
 /**
  * @author created by zzz at 2019/11/22 14:51
  */
@@ -10,7 +13,7 @@ public class NeuralNetworkContext {
 
     private int outPutSize;
 
-    private int hiddenLayerNumber;
+    private int[] hiddenLayerNeuronNumber;
 
     private ActiveFunction activeFunction;
 
@@ -36,12 +39,12 @@ public class NeuralNetworkContext {
         this.outPutSize = outPutSize;
     }
 
-    public int getHiddenLayerNumber() {
-        return hiddenLayerNumber;
+    public int[] getHiddenLayerNeuronNumber() {
+        return hiddenLayerNeuronNumber;
     }
 
-    public void setHiddenLayerNumber(int hiddenLayerNumber) {
-        this.hiddenLayerNumber = hiddenLayerNumber;
+    public void setHiddenLayerNeuronNumber(int[] hiddenLayerNeuronNumber) {
+        this.hiddenLayerNeuronNumber = hiddenLayerNeuronNumber;
     }
 
     public ActiveFunction getActiveFunction() {

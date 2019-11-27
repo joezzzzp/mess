@@ -1,4 +1,4 @@
-package algorithm.nn.framework;
+package algorithm.nn.framework.func;
 
 /**
  * 激活函数

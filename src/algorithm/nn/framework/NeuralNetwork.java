@@ -1,8 +1,10 @@
-package algorithm.nn;
+package algorithm.nn.framework;
 
-import algorithm.nn.framework.BaseNeuralNetworkComponent;
-import algorithm.nn.framework.Layer;
-import algorithm.nn.framework.NeuralNetworkContext;
+import algorithm.nn.framework.component.BaseNeuralNetworkComponent;
+import algorithm.nn.framework.component.layer.HiddenLayer;
+import algorithm.nn.framework.component.layer.InputLayer;
+import algorithm.nn.framework.component.layer.Layer;
+import algorithm.nn.framework.component.layer.OutputLayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +76,25 @@ public class NeuralNetwork extends BaseNeuralNetworkComponent {
             a = currentLayer.getInput();
             b = currentLayer.getBase();
         }
+    }
+
+    public void build() {
+        //输入层
+        InputLayer inputLayer = new InputLayer(context);
+        inputLayer.init();
+        setInputLayer(inputLayer);
+
+        //隐含层
+        for (int i = 0; i < context.getHiddenLayerNeuronNumber().length; i++) {
+            HiddenLayer hiddenLayer = new HiddenLayer(context, i);
+            hiddenLayer.init();
+            addHiddenLayer(hiddenLayer);
+        }
+
+        //输出层
+        OutputLayer outputLayer = new OutputLayer(context);
+        outputLayer.init();
+        setOutputLayer(outputLayer);
     }
 
     public double calLoss() {

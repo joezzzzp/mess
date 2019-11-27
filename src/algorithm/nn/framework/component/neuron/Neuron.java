@@ -1,8 +1,8 @@
-package algorithm.nn;
+package algorithm.nn.framework.component.neuron;
 
-import algorithm.nn.framework.BaseNeuralNetworkComponent;
 import algorithm.nn.framework.NeuralNetworkContext;
 import algorithm.nn.framework.NeuralNetworkException;
+import algorithm.nn.framework.component.BaseNeuralNetworkComponent;
 
 /**
  * @author created by zzz at 2019/11/22 14:31
@@ -19,6 +19,10 @@ public class Neuron extends BaseNeuralNetworkComponent {
      * 未运用激活函数前的输出
      */
     private double output;
+
+    public Neuron(NeuralNetworkContext context) {
+        super(context);
+    }
 
     public Neuron(NeuralNetworkContext context, int lastLayerNeuronNumber) {
         super(context);
