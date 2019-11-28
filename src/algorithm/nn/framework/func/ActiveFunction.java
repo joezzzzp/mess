@@ -7,6 +7,8 @@ package algorithm.nn.framework.func;
 
 public interface ActiveFunction {
 
+    ActiveFunction SIGMOID = new Sigmoid();
+
     /**
      * 应用激活函数获得输出
      * @param input 输入

@@ -7,6 +7,8 @@ package algorithm.nn.framework.func;
 
 public interface LossFunction {
 
+    LossFunction SQUARE_ERROR = new SquareError();
+
     /**
      * 计算损失
      * @param output 实际输出
