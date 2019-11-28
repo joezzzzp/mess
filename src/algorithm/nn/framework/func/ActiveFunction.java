@@ -9,6 +9,8 @@ public interface ActiveFunction {
 
     ActiveFunction SIGMOID = new Sigmoid();
 
+    ActiveFunction RELU = new ReLU();
+
     /**
      * 应用激活函数获得输出
      * @param input 输入

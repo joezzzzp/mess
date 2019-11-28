@@ -46,7 +46,7 @@ public class HiddenLayer extends BaseLayer {
             for (double[] doubles : base) {
                 outputPart += doubles[i];
             }
-            double hiddenPart = output[i] * (1 - output[i]);
+            double hiddenPart = 1;
             double[] weights = n.getWeights();
             for (int j = 0; j < n.getWeights().length; j++) {
                 double inputPart = input[j];

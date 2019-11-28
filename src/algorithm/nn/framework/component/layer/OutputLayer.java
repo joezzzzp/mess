@@ -36,7 +36,7 @@ public class OutputLayer extends BaseLayer {
         double learnRate = context.getLearnRate();
         for (int i = 0; i < neuronNumber; i++) {
             Neuron n = neurons[i];
-            double outputPart = -1 * (expected[i] - output[i]) * output[i] * (1 - output[i]);
+            double outputPart = -1 * (expected[i] - output[i]);
             double[] weights = n.getWeights();
             for (int j = 0; j < weights.length; j++) {
                 this.base[i][j] = outputPart * n.getWeights()[j];

@@ -20,11 +20,11 @@ public class NeuralNetworkApp {
     //https://blog.csdn.net/weixin_38347387/article/details/82936585
     public static void main(String[] args) {
         NeuralNetworkContext context = new NeuralNetworkContext();
-        context.setActiveFunction(ActiveFunction.SIGMOID);
+        context.setActiveFunction(ActiveFunction.RELU);
         context.setLossFunction(LossFunction.SQUARE_ERROR);
-        context.setLearnRate(0.1);
+        context.setLearnRate(0.0001);
         context.setInputSize(32);
-        context.setHiddenLayerNeuronNumber(new int[]{8, 8});
+        context.setHiddenLayerNeuronNumber(new int[]{32, 32, 32, 32});
         context.setOutPutSize(2);
         context.setInitStrategy(InitStrategy.RANDOM);
         NeuralNetwork nn = new NeuralNetwork(context);
@@ -34,15 +34,15 @@ public class NeuralNetworkApp {
         Map<Integer, Boolean> testSet = new HashMap<>();
         buildSet(trainSet, testSet);
 
-        System.out.println("未训练时：");
-        test(nn, testSet);
-        apply(nn);
-        for (int i = 0; i < 100; i++) {
+//        System.out.println("未训练时：");
+//        test(nn, testSet);
+//        apply(nn);
+        for (int i = 0; i < 10000; i++) {
             train(nn, trainSet);
             System.out.println("迭代第" + (i + 1) + "次：");
             test(nn, testSet);
         }
-        apply(nn);
+//        apply(nn);
     }
 
     private static void apply(NeuralNetwork neuralNetwork) {
@@ -113,10 +113,12 @@ public class NeuralNetworkApp {
     }
 
     private static void print(double[] result) {
+        System.out.print("[");
         for (double d : result) {
             System.out.print(d);
             System.out.print(" ");
         }
+        System.out.print("]");
     }
 
     //将十进制转为二进制
