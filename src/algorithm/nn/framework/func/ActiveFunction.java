@@ -17,4 +17,6 @@ public interface ActiveFunction {
      * @return 返回的输出
      */
     double active(double input);
+
+    double backward(double output);
 }

@@ -22,9 +22,9 @@ public class NeuralNetworkApp {
         NeuralNetworkContext context = new NeuralNetworkContext();
         context.setActiveFunction(ActiveFunction.RELU);
         context.setLossFunction(LossFunction.SQUARE_ERROR);
-        context.setLearnRate(0.0001);
+        context.setLearnRate(0.000001);
         context.setInputSize(32);
-        context.setHiddenLayerNeuronNumber(new int[]{32, 32, 32, 32});
+        context.setHiddenLayerNeuronNumber(new int[]{8});
         context.setOutPutSize(2);
         context.setInitStrategy(InitStrategy.RANDOM);
         NeuralNetwork nn = new NeuralNetwork(context);
@@ -50,7 +50,7 @@ public class NeuralNetworkApp {
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextInt()) {
             int value = scanner.nextInt();
-            if (value > 10000 || value < 0) {
+            if (value > 1000000 || value < 0) {
                 break;
             }
             neuralNetwork.setInput(toBinaryNum(value));
@@ -103,7 +103,10 @@ public class NeuralNetworkApp {
     //true 偶数 false 奇数
     private static void buildSet(Map<Integer, Boolean> trainSet, Map<Integer, Boolean> testSet) {
         Random random = new Random();
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 1000000; i++) {
+            if (random.nextInt(100) != 0) {
+                continue;
+            }
             if (random.nextInt(10) == 0) {
                 testSet.put(i, i % 2 != 0);
                 continue;

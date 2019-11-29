@@ -9,4 +9,12 @@ public class ReLU implements ActiveFunction {
     public double active(double input) {
         return Math.max(0, input);
     }
+
+    @Override
+    public double backward(double output) {
+        if (output <= 0) {
+            return 0;
+        }
+        return 1;
+    }
 }
